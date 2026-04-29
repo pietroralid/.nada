@@ -1,66 +1,102 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+"use client";
+
+import { useState } from "react";
+
+const petals = Array.from({ length: 26 }, (_, index) => ({
+  id: index,
+  left: `${(index * 37) % 100}%`,
+  delay: `${(index % 9) * 0.55}s`,
+  duration: `${7 + (index % 6)}s`,
+  size: `${10 + (index % 5) * 4}px`,
+}));
+
+const reasons = [
+  "o teu sorriso muda qualquer dia",
+  "tudo fica mais bonito quando penso em voce",
+  "eu quero viver mais momentos simples ao teu lado",
+];
 
 export default function Home() {
+  const [answered, setAnswered] = useState(false);
+
   return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className={styles.intro}>
-          <h1>To get started, edit the page.tsx file.</h1>
-          <p>
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Learning
-            </a>{" "}
-            center.
+    <main className="proposal">
+      <div className="petals" aria-hidden="true">
+        {petals.map((petal) => (
+          <span
+            key={petal.id}
+            style={{
+              left: petal.left,
+              animationDelay: petal.delay,
+              animationDuration: petal.duration,
+              width: petal.size,
+              height: petal.size,
+            }}
+          />
+        ))}
+      </div>
+
+      <section className="hero" aria-label="Pedido de namoro para Lauren">
+        <div className="bouquet bouquet-left" aria-hidden="true">
+          <Flower color="#e94b77" />
+          <Flower color="#f6a6b9" />
+          <Flower color="#f7d267" />
+        </div>
+
+        <div className="letter">
+          <p className="kicker">Lauren, eu preparei isso pra voce</p>
+          <h1>Quer namorar comigo?</h1>
+          <p className="message">
+            Eu nao quero que seja so uma pergunta bonita numa tela. Quero que seja
+            o comeco de uma historia nossa, com carinho, risadas, cuidado e
+            muitos momentos para lembrar.
           </p>
+
+          <div className="reasons" aria-label="Motivos">
+            {reasons.map((reason) => (
+              <span key={reason}>{reason}</span>
+            ))}
+          </div>
+
+          <div className="actions">
+            <button className="yes" type="button" onClick={() => setAnswered(true)}>
+              Sim
+            </button>
+            <button className="yes secondary" type="button" onClick={() => setAnswered(true)}>
+              Claro que sim
+            </button>
+          </div>
+
+          {answered && (
+            <div className="answer" role="status">
+              <span>♥</span>
+              <p>Agora oficialmente eu tenho o melhor motivo para sorrir.</p>
+            </div>
+          )}
         </div>
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className={styles.secondary}
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+
+        <div className="bouquet bouquet-right" aria-hidden="true">
+          <Flower color="#d93f68" />
+          <Flower color="#ffffff" />
+          <Flower color="#f3b2c1" />
         </div>
-      </main>
-    </div>
+      </section>
+    </main>
+  );
+}
+
+function Flower({ color }: { color: string }) {
+  return (
+    <svg viewBox="0 0 120 150" role="img" aria-label="Flor decorativa">
+      <path d="M60 72 C50 100 46 124 42 148" className="stem" />
+      <path d="M57 105 C36 94 23 84 12 66 C36 66 51 77 61 94" className="leaf" />
+      <path d="M63 102 C84 86 98 77 112 76 C99 97 82 107 62 111" className="leaf" />
+      <g className="bloom" style={{ "--flower": color } as React.CSSProperties}>
+        <ellipse cx="60" cy="44" rx="17" ry="30" transform="rotate(0 60 60)" />
+        <ellipse cx="60" cy="44" rx="17" ry="30" transform="rotate(60 60 60)" />
+        <ellipse cx="60" cy="44" rx="17" ry="30" transform="rotate(120 60 60)" />
+        <circle cx="60" cy="60" r="15" className="center" />
+      </g>
+    </svg>
   );
 }
